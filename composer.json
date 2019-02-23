@@ -1,0 +1,21 @@
+{
+  "name": "sdk-liq-pay",
+  "license": "free",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "LiqPay\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "tests\\": "tests"
+    }
+  },
+  "require": {
+    "php": ">=7.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^7"
+  }
+}
