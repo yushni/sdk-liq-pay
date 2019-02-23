@@ -9,6 +9,8 @@ use LiqPay\Action\Payment;
 class LiqPay
 {
 	private const
+		HOST = 'www.liqpay.ua',
+
 		VERSION = 3;
 
 	public const
@@ -50,7 +52,7 @@ class LiqPay
 		$data = $this->encode($params);
 		$signature = $this->toSignature($data);
 
-		//todo: generate url
+		return $this->generateUrl('api/3/checkout', $data, $signature);
 	}
 
 	private function encode(array $params): string
@@ -84,5 +86,15 @@ class LiqPay
 	private function decode(string $params): \stdClass
 	{
 		return json_decode(base64_decode($params));
+	}
+
+	private function generateUrl(string $path, string $data, string $signature): string
+	{
+		$queryParams = http_build_query([
+			'data' => $data,
+			'signature' => $signature,
+		]);
+
+		return sprintf('%s/%s?%s', self::HOST, $path, $queryParams);
 	}
 }

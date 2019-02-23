@@ -12,6 +12,7 @@ class Payment extends Action
 
 	public static function fromData(\stdClass $data): Action
 	{
+
 		// TODO: Implement fromData() method.
 	}
 }
