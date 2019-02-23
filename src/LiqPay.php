@@ -43,9 +43,9 @@ class LiqPay
 		];
 	}
 
-	public function generateCheckoutUrl(Action $payment): string
+	public function generateCheckoutUrl(Action $action): string
 	{
-		$params = $payment->toParams() + $this->defaultParams;
+		$params = $action->toParams() + $this->defaultParams;
 
 		$data = $this->encode($params);
 		$signature = $this->toSignature($data);

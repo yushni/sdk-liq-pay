@@ -50,7 +50,7 @@ abstract class Action
 			'amount'      => $this->amount,
 			'currency'    => $this->currency,
 			'description' => $this->description,
-			'action'      => $this->getAction(),
+			'action'      => static::getAction(),
 			'order_id'    => $this->orderId,
 		];
 
