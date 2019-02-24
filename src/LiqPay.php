@@ -76,7 +76,7 @@ class LiqPay
 		$data = $this->decode($data);
 
 		switch ($data->action) {
-			case Payment::getAction():
+			case Payment::ACTION_PAY:
 				return Payment::fromData($data);
 		}
 

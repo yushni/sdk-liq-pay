@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace LiqPay\Action;
 
+use LiqPay\LiqPay;
+
 abstract class Action
 {
 	protected
@@ -11,16 +13,15 @@ abstract class Action
 		$amount,
 		$orderId,
 		$currency,
+		$action,
+		$status,
 		$description;
-
-	abstract public static function getAction(): string;
-
-	abstract public static function fromData(\stdClass $data): Action;
 
 	public function __construct(
 		float $amount,
 		string $orderId,
 		string $currency,
+		string $action,
 		string $description
 	)
 	{
@@ -28,6 +29,37 @@ abstract class Action
 		$this->orderId = $orderId;
 		$this->currency = $currency;
 		$this->description = $description;
+		$this->action = $action;
+	}
+
+	public static function fromData(\stdClass $data): Action
+	{
+		$requiredFields = [
+			'status',
+			'amount',
+			'orderId',
+			'currency',
+			'description',
+			'action',
+		];
+
+		foreach ($requiredFields as $requiredField) {
+			if (!empty($data->$requiredField)) {
+				throw new \RuntimeException(sprintf('Field %s is not valid.', $requiredField));
+			}
+		}
+
+		$action = new static(
+			$data->amount,
+			$data->orderId,
+			$data->currency,
+			$data->action,
+			$data->description
+		);
+
+		$action->status = $data->status;
+
+		return $action;
 	}
 
 	public function setResultUrl(string $resultUrl)
@@ -44,13 +76,43 @@ abstract class Action
 		return $this;
 	}
 
+	public function getAmount(): float
+	{
+		return $this->amount;
+	}
+
+	public function getOrderId(): string
+	{
+		return $this->orderId;
+	}
+
+	public function isSuccess(): bool
+	{
+		return in_array($this->status, [LiqPay::STATUS_SANDBOX, LiqPay::STATUS_SUCCESS]);
+	}
+
+	public function getCurrency(): string
+	{
+		return $this->currency;
+	}
+
+	public function getDescription(): string
+	{
+		return $this->description;
+	}
+
+	public function getAction(): string
+	{
+		return $this->action;
+	}
+
 	public function toParams(): array
 	{
 		$params = [
 			'amount'      => $this->amount,
 			'currency'    => $this->currency,
 			'description' => $this->description,
-			'action'      => static::getAction(),
+			'action'      => $this->action,
 			'order_id'    => $this->orderId,
 		];
 

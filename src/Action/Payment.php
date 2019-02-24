@@ -5,14 +5,11 @@ namespace LiqPay\Action;
 
 class Payment extends Action
 {
-	public static function getAction(): string
-	{
-		return 'pay';
-	}
+	public const
+		ACTION_PAY = 'pay';
 
-	public static function fromData(\stdClass $data): Action
+	public function pay(float $amount, string $orderId, string $currency, string $description)
 	{
-
-		// TODO: Implement fromData() method.
+		return new self($amount, $orderId, $currency, self::ACTION_PAY, $description);
 	}
 }
