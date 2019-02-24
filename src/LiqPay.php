@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace LiqPay;
 
@@ -26,7 +26,7 @@ class LiqPay
 		$publicKey,
 		$privateKey,
 		$sandbox,
-	    $defaultParams;
+		$defaultParams;
 
 	public function __construct(
 		string $publicKey,
@@ -40,8 +40,8 @@ class LiqPay
 
 		$this->defaultParams = [
 			'public_key' => $publicKey,
-			'sandbox' => $sandbox,
-			'version' => self::VERSION,
+			'sandbox'    => $sandbox,
+			'version'    => self::VERSION,
 		];
 	}
 
@@ -91,7 +91,7 @@ class LiqPay
 	private function generateUrl(string $path, string $data, string $signature): string
 	{
 		$queryParams = http_build_query([
-			'data' => $data,
+			'data'      => $data,
 			'signature' => $signature,
 		]);
 

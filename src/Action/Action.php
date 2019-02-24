@@ -117,11 +117,11 @@ abstract class Action
 		];
 
 		if (!empty($this->resultUrl)) {
-			$params['result_url']  = $this->resultUrl;
+			$params['result_url'] = $this->resultUrl;
 		}
 
 		if (!empty($this->serverUrl)) {
-			$params['server_url']  = $this->serverUrl;
+			$params['server_url'] = $this->serverUrl;
 		}
 
 		return $params;
