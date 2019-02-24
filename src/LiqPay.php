@@ -55,18 +55,6 @@ class LiqPay
 		return $this->generateUrl('api/3/checkout', $data, $signature);
 	}
 
-	private function encode(array $params): string
-	{
-		return base64_encode(stripcslashes(json_encode($params)));
-	}
-
-	private function toSignature(string $data): string
-	{
-		return base64_encode(
-			sha1($this->privateKey . $data . $this->privateKey, true)
-		);
-	}
-
 	public function obtainCallback(string $data, string $signature): Action
 	{
 		if ($signature !== $this->toSignature($data)) {
@@ -83,9 +71,21 @@ class LiqPay
 		throw new \LogicException('Unsupported action');
 	}
 
+	private function encode(array $params): string
+	{
+		return base64_encode(stripcslashes(json_encode($params)));
+	}
+
 	private function decode(string $params): \stdClass
 	{
 		return json_decode(base64_decode($params));
+	}
+
+	private function toSignature(string $data): string
+	{
+		return base64_encode(
+			sha1($this->privateKey . $data . $this->privateKey, true)
+		);
 	}
 
 	private function generateUrl(string $path, string $data, string $signature): string
