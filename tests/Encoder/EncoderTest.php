@@ -10,18 +10,18 @@ class EncoderTest extends TestCase
     private
         $encoder;
 
-    public function __construct(?string $name = null, array $data = [], string $dataName = '')
+    public function __construct (?string $name = null, array $data = [], string $dataName = '')
     {
         $this->encoder = new Encoder();
         parent::__construct($name, $data, $dataName);
     }
 
-    public function testEncode(): void
+    public function testEncode (): void
     {
         $expectedString = '{"public":"\some \hard \key","private":"\/fdafdsa"}';
 
         $params = [
-            'public' => '\\some \\hard \\key',
+            'public'  => '\\some \\hard \\key',
             'private' => '\/fdafdsa',
         ];
 
@@ -30,10 +30,10 @@ class EncoderTest extends TestCase
         $this->assertEquals(base64_encode($expectedString), $got);
     }
 
-    public function testDecode(): void
+    public function testDecode (): void
     {
         $expected = [
-            'public' => 'publicKey',
+            'public'  => 'publicKey',
             'private' => '\/fdafdsa',
         ];
 
@@ -45,10 +45,10 @@ class EncoderTest extends TestCase
         $this->assertEquals($expected, $got);
     }
 
-    public function testGenerateSignature(): void
+    public function testGenerateSignature (): void
     {
         $params = [
-            'public' => 'publicKey',
+            'public'  => 'publicKey',
             'private' => '\/fdafdsa',
         ];
 

@@ -12,7 +12,7 @@ class LiqPayTest extends TestCase
     /** @var LiqPay */
     private $liqPay;
 
-    protected function setUp()
+    protected function setUp ()
     {
         $encoder = $this->getMockBuilder(EncoderInterface::class)
             ->setMethods(['encode', 'decode', 'generateSignature'])
@@ -31,7 +31,7 @@ class LiqPayTest extends TestCase
         $this->liqPay = new LiqPay('1', '2', '3', $encoder);
     }
 
-    public function testGenerateCheckoutUrl()
+    public function testGenerateCheckoutUrl ()
     {
         $payment = $this->getMockBuilder(Payment::class)
             ->disableOriginalConstructor()
@@ -44,7 +44,7 @@ class LiqPayTest extends TestCase
 
         $expected = 'www.liqpay.ua/api/3/checkout?data=data&signature=sign';
         $got = $this->liqPay->generateCheckoutUrl($payment);
+
         $this->assertEquals($expected, $got);
     }
 }
-

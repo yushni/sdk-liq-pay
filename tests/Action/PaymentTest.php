@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 class PaymentTest extends TestCase
 {
 
-    public function testFromData(): void
+    public function testFromData (): void
     {
         $data = [
             'amount'      => 1.24,
@@ -23,7 +23,7 @@ class PaymentTest extends TestCase
         $this->assertInstanceOf(Payment::class, Payment::fromData($data));
     }
 
-    public function testPay(): void
+    public function testPay (): void
     {
         $params = [
             'amount'      => 1.24,
