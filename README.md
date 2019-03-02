@@ -2,7 +2,7 @@ Liq Pay Checkout
 ========================
 ### Installation
 ```console
-composer require liqpay
+composer require yushni/liq-pay-sdk
 ```
 ## Simple usage :
 
