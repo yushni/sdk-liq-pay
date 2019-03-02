@@ -1,7 +1,8 @@
 {
-  "name": "sdk-liq-pay",
-  "license": "free",
-  "type": "project",
+  "name": "yushni/liq-pay-sdk",
+  "type": "library",
+  "description": "This library must simplify your connection with Liq Pay payment system.",
+  "license": "MIT",
   "autoload": {
     "psr-4": {
       "LiqPay\\": "src"
