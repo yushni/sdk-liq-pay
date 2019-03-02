@@ -8,8 +8,8 @@ class Payment extends Action
 	public const
 		ACTION_PAY = 'pay';
 
-	public function pay(float $amount, string $orderId, string $currency, string $description)
+	public static function pay(float $amount, string $orderId, string $currency, string $description)
 	{
-		return new self($amount, $orderId, $currency, self::ACTION_PAY, $description);
+		return new static($amount, $orderId, $currency, self::ACTION_PAY, $description);
 	}
 }

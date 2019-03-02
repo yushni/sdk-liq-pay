@@ -5,6 +5,7 @@ namespace LiqPay;
 
 use LiqPay\Action\Action;
 use LiqPay\Action\Payment;
+use LiqPay\Encoder\EncoderInterface;
 
 class LiqPay
 {
@@ -23,69 +24,61 @@ class LiqPay
 		STATUS_SANDBOX = 'sandbox';
 
 	private
-		$publicKey,
 		$privateKey,
-		$sandbox,
-		$defaultParams;
+		$defaultParams,
+        $actions,
+        $encoder;
 
-	public function __construct(
+    public function __construct(
 		string $publicKey,
 		string $privateKey,
-		bool $sandbox
+		bool $sandbox,
+        EncoderInterface $encoder
 	)
 	{
 		$this->privateKey = $privateKey;
-		$this->publicKey = $publicKey;
-		$this->sandbox = $sandbox;
+        $this->encoder = $encoder;
 
 		$this->defaultParams = [
 			'public_key' => $publicKey,
 			'sandbox'    => $sandbox,
 			'version'    => self::VERSION,
 		];
-	}
+
+        $this->addAction(Payment::class, [Payment::ACTION_PAY]);
+    }
 
 	public function generateCheckoutUrl(Action $action): string
 	{
 		$params = $action->toParams() + $this->defaultParams;
 
-		$data = $this->encode($params);
-		$signature = $this->toSignature($data);
+		$data = $this->encoder->encode($params);
+		$signature = $this->encoder->generateSignature($data, $this->privateKey);
 
 		return $this->generateUrl('api/3/checkout', $data, $signature);
 	}
 
 	public function obtainCallback(string $data, string $signature): Action
 	{
-		if ($signature !== $this->toSignature($data)) {
+	    if ($signature !== $this->encoder->generateSignature($data, $this->privateKey)) {
 			throw new \RuntimeException('Invalid response');
 		}
 
-		$data = $this->decode($data);
+        $data = $this->encoder->decode($data);
 
-		switch ($data->action) {
-			case Payment::ACTION_PAY:
-				return Payment::fromData($data);
-		}
+        foreach ($this->actions as $class => $actions) {
+            if (\in_array($data['action'], $actions, true)) {
+                /** @var $class Action */
+                return $class::fromData($data);
+            }
+        }
 
 		throw new \LogicException('Unsupported action');
 	}
 
-	private function encode(array $params): string
-	{
-		return base64_encode(stripcslashes(json_encode($params)));
-	}
-
-	private function decode(string $params): \stdClass
-	{
-		return json_decode(base64_decode($params));
-	}
-
-	private function toSignature(string $data): string
-	{
-		return base64_encode(
-			sha1($this->privateKey . $data . $this->privateKey, true)
-		);
+    public function addAction(string $actionClassName, array $actions): void
+    {
+        $this->actions[$actionClassName] = $actions;
 	}
 
 	private function generateUrl(string $path, string $data, string $signature): string

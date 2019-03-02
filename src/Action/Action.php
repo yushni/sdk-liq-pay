@@ -32,32 +32,32 @@ abstract class Action
 		$this->action = $action;
 	}
 
-	public static function fromData(\stdClass $data): Action
+	public static function fromData(array $data): Action
 	{
 		$requiredFields = [
 			'status',
 			'amount',
-			'orderId',
+			'order_id',
 			'currency',
 			'description',
 			'action',
 		];
 
 		foreach ($requiredFields as $requiredField) {
-			if (!empty($data->$requiredField)) {
+			if (empty($data[$requiredField])) {
 				throw new \RuntimeException(sprintf('Field %s is not valid.', $requiredField));
 			}
 		}
 
 		$action = new static(
-			$data->amount,
-			$data->orderId,
-			$data->currency,
-			$data->action,
-			$data->description
+			$data['amount'],
+			$data['order_id'],
+			$data['currency'],
+			$data['action'],
+			$data['description']
 		);
 
-		$action->status = $data->status;
+		$action->status = $data['status'];
 
 		return $action;
 	}
@@ -88,7 +88,7 @@ abstract class Action
 
 	public function isSuccess(): bool
 	{
-		return in_array($this->status, [LiqPay::STATUS_SANDBOX, LiqPay::STATUS_SUCCESS]);
+		return in_array($this->status, [LiqPay::STATUS_SANDBOX, LiqPay::STATUS_SUCCESS], true);
 	}
 
 	public function getCurrency(): string
